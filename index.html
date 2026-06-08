@@ -3,542 +3,270 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1a0a2e">
+<meta name="theme-color" content="#0f0720">
 <title>恋人游戏 · 情侣互动卡牌</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg: #0f0720;
-    --bg2: #1a0f35;
-    --gold: #e8c97a;
-    --gold2: #f5e0a0;
-    --rose: #e8748a;
-    --rose2: #f5a0b0;
-    --mint: #74c9b8;
-    --mint2: #a0e0d4;
-    --amber: #e8a060;
-    --amber2: #f5c090;
-    --purple: #a87de8;
-    --text: #f0e8ff;
-    --text2: #c8b8e8;
-    --radius: 24px;
-  }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Serif SC', serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
-
-  /* Stars background */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
-      radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
-      radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
-      radial-gradient(1px 1px at 85% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
-      radial-gradient(1px 1px at 20% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
-      radial-gradient(1px 1px at 60% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
-      radial-gradient(1px 1px at 90% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(2px 2px at 40% 50%, rgba(232,201,122,0.4) 0%, transparent 100%),
-      radial-gradient(2px 2px at 75% 25%, rgba(168,125,232,0.3) 0%, transparent 100%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(100,50,180,0.25) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(180,60,100,0.2) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .app {
-    position: relative;
-    z-index: 1;
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 0 20px 60px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* Header */
-  header {
-    width: 100%;
-    text-align: center;
-    padding: 40px 0 24px;
-  }
-  .logo-icon {
-    font-size: 36px;
-    display: block;
-    margin-bottom: 10px;
-    animation: float 3s ease-in-out infinite;
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-  }
-  h1 {
-    font-family: 'Ma Shan Zheng', cursive;
-    font-size: 32px;
-    letter-spacing: 0.15em;
-    color: var(--gold2);
-    text-shadow: 0 0 30px rgba(232,201,122,0.5);
-    margin-bottom: 6px;
-  }
-  .subtitle {
-    font-size: 13px;
-    color: var(--text2);
-    letter-spacing: 0.1em;
-  }
-
-  /* Category tabs */
-  .tabs {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    width: 100%;
-    margin-bottom: 28px;
-  }
-  .tab {
-    padding: 10px 4px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.04);
-    color: var(--text2);
-    font-size: 12px;
-    font-family: 'Noto Serif SC', serif;
-    cursor: pointer;
-    transition: all 0.25s;
-    text-align: center;
-    line-height: 1.5;
-    backdrop-filter: blur(4px);
-  }
-  .tab .tab-icon { font-size: 18px; display: block; margin-bottom: 3px; }
-  .tab.active-q { background: rgba(232,201,122,0.15); border-color: var(--gold); color: var(--gold2); }
-  .tab.active-d { background: rgba(232,116,138,0.15); border-color: var(--rose); color: var(--rose2); }
-  .tab.active-c { background: rgba(116,201,184,0.15); border-color: var(--mint); color: var(--mint2); }
-  .tab.active-s { background: rgba(232,160,96,0.15); border-color: var(--amber); color: var(--amber2); }
-
-  /* Card area */
-  .card-stage {
-    width: 100%;
-    perspective: 1200px;
-    margin-bottom: 28px;
-    position: relative;
-    height: 280px;
-  }
-
-  /* Decorative back cards */
-  .card-shadow {
-    position: absolute;
-    width: calc(100% - 32px);
-    left: 16px;
-    height: 100%;
-    border-radius: var(--radius);
-    transition: all 0.4s cubic-bezier(.4,0,.2,1);
-  }
-  .card-shadow-1 {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    transform: translateY(8px) scale(0.96);
-  }
-  .card-shadow-2 {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    transform: translateY(4px) scale(0.98);
-  }
-
-  .card {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: var(--radius);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 32px 28px;
-    cursor: pointer;
-    transition: opacity 0.35s, transform 0.35s cubic-bezier(.4,0,.2,1);
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .card.exit {
-    opacity: 0;
-    transform: translateY(-24px) scale(0.95);
-  }
-  .card.enter {
-    opacity: 0;
-    transform: translateY(24px) scale(0.95);
-  }
-  .card.show {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-
-  .card-q { background: linear-gradient(145deg, #2a1f5a 0%, #1e1640 100%); border: 1px solid rgba(232,201,122,0.3); box-shadow: 0 20px 60px rgba(100,60,200,0.3), inset 0 1px 0 rgba(232,201,122,0.2); }
-  .card-d { background: linear-gradient(145deg, #3a1530 0%, #2a0e22 100%); border: 1px solid rgba(232,116,138,0.3); box-shadow: 0 20px 60px rgba(200,60,100,0.3), inset 0 1px 0 rgba(232,116,138,0.2); }
-  .card-c { background: linear-gradient(145deg, #0e2e2a 0%, #0a2020 100%); border: 1px solid rgba(116,201,184,0.3); box-shadow: 0 20px 60px rgba(60,160,140,0.3), inset 0 1px 0 rgba(116,201,184,0.2); }
-  .card-s { background: linear-gradient(145deg, #2e1e0a 0%, #201408 100%); border: 1px solid rgba(232,160,96,0.3); box-shadow: 0 20px 60px rgba(200,120,60,0.3), inset 0 1px 0 rgba(232,160,96,0.2); }
-
-  .card-welcome { background: linear-gradient(145deg, #1e1640 0%, #160f30 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 60px rgba(80,40,160,0.3); }
-
-  .card-badge {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    padding: 4px 14px;
-    border-radius: 20px;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-  .card-q .card-badge { background: rgba(232,201,122,0.2); color: var(--gold2); border: 1px solid rgba(232,201,122,0.3); }
-  .card-d .card-badge { background: rgba(232,116,138,0.2); color: var(--rose2); border: 1px solid rgba(232,116,138,0.3); }
-  .card-c .card-badge { background: rgba(116,201,184,0.2); color: var(--mint2); border: 1px solid rgba(116,201,184,0.3); }
-  .card-s .card-badge { background: rgba(232,160,96,0.2); color: var(--amber2); border: 1px solid rgba(232,160,96,0.3); }
-  .card-welcome .card-badge { background: rgba(168,125,232,0.2); color: #c8a0f8; border: 1px solid rgba(168,125,232,0.3); }
-
-  .card-text {
-    font-size: 19px;
-    line-height: 1.75;
-    text-align: center;
-    color: rgba(255,255,255,0.92);
-  }
-  .card-hint {
-    margin-top: 24px;
-    font-size: 12px;
-    color: rgba(255,255,255,0.3);
-    letter-spacing: 0.08em;
-  }
-
-  /* Buttons */
-  .btn-row {
-    display: flex;
-    gap: 12px;
-    width: 100%;
-    margin-bottom: 16px;
-  }
-  .btn-draw {
-    flex: 1;
-    padding: 16px;
-    border-radius: 18px;
-    border: none;
-    font-family: 'Noto Serif SC', serif;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .btn-draw::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
-  }
-  .btn-draw:active { transform: scale(0.97); }
-
-  .btn-q { background: linear-gradient(135deg, #8060d0, #6040b0); color: #fff; box-shadow: 0 8px 24px rgba(100,60,200,0.4); }
-  .btn-d { background: linear-gradient(135deg, #c05070, #a03050); color: #fff; box-shadow: 0 8px 24px rgba(180,60,100,0.4); }
-  .btn-c { background: linear-gradient(135deg, #40a090, #308070); color: #fff; box-shadow: 0 8px 24px rgba(60,150,130,0.4); }
-  .btn-s { background: linear-gradient(135deg, #c07840, #a06030); color: #fff; box-shadow: 0 8px 24px rgba(180,110,50,0.4); }
-
-  .btn-skip {
-    padding: 16px 20px;
-    border-radius: 18px;
-    border: 1px solid rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.06);
-    color: var(--text2);
-    font-size: 13px;
-    font-family: 'Noto Serif SC', serif;
-    cursor: pointer;
-    backdrop-filter: blur(4px);
-    transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .btn-skip:active { transform: scale(0.97); }
-
-  /* Stats */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    width: 100%;
-    margin-top: 8px;
-  }
-  .stat {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 14px 8px;
-    text-align: center;
-    backdrop-filter: blur(4px);
-  }
-  .stat-val {
-    font-size: 26px;
-    font-weight: 600;
-    color: var(--gold);
-    font-family: 'Ma Shan Zheng', cursive;
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-  .stat-label { font-size: 11px; color: var(--text2); letter-spacing: 0.05em; }
-
-  /* Progress */
-  .progress-wrap {
-    width: 100%;
-    margin-top: 20px;
-  }
-  .progress-bar {
-    width: 100%;
-    height: 3px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 8px;
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.4s ease;
-    background: var(--gold);
-  }
-  .progress-text {
-    font-size: 11px;
-    color: var(--text2);
-    text-align: right;
-  }
-
-  /* Ripple on tap */
-  @keyframes ripple {
-    to { transform: scale(4); opacity: 0; }
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg: #0f0720; --gold: #e8c97a; --gold2: #f5e0a0;
+  --rose2: #f5a0b0; --mint2: #a0e0d4; --amber2: #f5c090;
+  --text: #f0e8ff; --text2: #c8b8e8; --text3: #8878a8;
+}
+body { background: var(--bg); color: var(--text); font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; min-height:100vh; overflow-x:hidden; }
+.glow1 { position:fixed; border-radius:50%; pointer-events:none; width:340px; height:220px; background:radial-gradient(ellipse,rgba(100,50,180,0.22) 0%,transparent 70%); top:-60px; left:-60px; z-index:0; }
+.glow2 { position:fixed; border-radius:50%; pointer-events:none; width:280px; height:220px; background:radial-gradient(ellipse,rgba(180,60,100,0.18) 0%,transparent 70%); bottom:0; right:-60px; z-index:0; }
+.app { position:relative; z-index:1; max-width:480px; margin:0 auto; padding:0 18px 60px; min-height:100vh; display:flex; flex-direction:column; align-items:center; }
+header { width:100%; text-align:center; padding:36px 0 20px; }
+.logo { font-size:40px; display:block; margin-bottom:8px; animation:float 3s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+h1 { font-size:30px; font-weight:700; letter-spacing:0.18em; color:var(--gold2); text-shadow:0 0 24px rgba(232,201,122,0.45); margin-bottom:6px; }
+.subtitle { font-size:12px; color:var(--text2); letter-spacing:0.1em; }
+.tabs { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; width:100%; margin-bottom:22px; }
+.tab { padding:10px 4px; border-radius:14px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04); color:var(--text2); font-size:11px; cursor:pointer; text-align:center; line-height:1.5; transition:all 0.2s; user-select:none; }
+.tab .ti { font-size:20px; display:block; margin-bottom:2px; }
+.tab:active { opacity:0.7; transform:scale(0.97); }
+.tab.aq { background:rgba(232,201,122,.15); border-color:rgba(232,201,122,.5); color:var(--gold2); }
+.tab.ad { background:rgba(232,116,138,.15); border-color:rgba(232,116,138,.5); color:var(--rose2); }
+.tab.ac { background:rgba(116,201,184,.15); border-color:rgba(116,201,184,.5); color:var(--mint2); }
+.tab.as { background:rgba(232,160,96,.15);  border-color:rgba(232,160,96,.5);  color:var(--amber2); }
+.stage { width:100%; height:260px; position:relative; margin-bottom:22px; }
+.shadow { position:absolute; width:calc(100% - 28px); left:14px; height:100%; border-radius:22px; border:1px solid rgba(255,255,255,0.06); pointer-events:none; }
+.s1 { background:rgba(255,255,255,.03); transform:translateY(8px) scale(0.96); }
+.s2 { background:rgba(255,255,255,.05); transform:translateY(4px) scale(0.98); }
+.card { position:absolute; width:100%; height:100%; border-radius:22px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px 24px; cursor:pointer; transition:opacity 0.3s ease, transform 0.3s ease; }
+.card.hide { opacity:0; transform:translateY(-20px) scale(0.95); pointer-events:none; }
+.card.show { opacity:1; transform:translateY(0) scale(1); }
+.card.rise { opacity:0; transform:translateY(20px) scale(0.95); }
+.card.cw { background:linear-gradient(145deg,#1e1640,#160f30); border:1px solid rgba(255,255,255,.1); box-shadow:0 16px 48px rgba(80,40,160,.3); }
+.card.cq { background:linear-gradient(145deg,#2a1f5a,#1e1640); border:1px solid rgba(232,201,122,.3); box-shadow:0 16px 48px rgba(100,60,200,.3); }
+.card.cd { background:linear-gradient(145deg,#3a1530,#2a0e22); border:1px solid rgba(232,116,138,.3); box-shadow:0 16px 48px rgba(200,60,100,.3); }
+.card.cc { background:linear-gradient(145deg,#0e2e2a,#0a2020); border:1px solid rgba(116,201,184,.3); box-shadow:0 16px 48px rgba(60,160,140,.3); }
+.card.cs { background:linear-gradient(145deg,#2e1e0a,#201408); border:1px solid rgba(232,160,96,.3);  box-shadow:0 16px 48px rgba(200,120,60,.3); }
+.badge { font-size:11px; letter-spacing:.1em; padding:4px 14px; border-radius:20px; margin-bottom:16px; font-weight:600; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.08); color:rgba(255,255,255,.8); }
+.ctext { font-size:17px; line-height:1.75; text-align:center; color:rgba(255,255,255,.92); }
+.chint { margin-top:20px; font-size:11px; color:rgba(255,255,255,.25); letter-spacing:.05em; }
+.btns { display:flex; gap:10px; width:100%; margin-bottom:14px; }
+.btn-draw { flex:1; padding:15px; border-radius:16px; border:none; font-size:15px; font-family:inherit; cursor:pointer; color:#fff; font-weight:600; letter-spacing:.05em; transition:transform 0.15s, opacity 0.15s; }
+.btn-draw:active { transform:scale(0.97); opacity:0.88; }
+.bq { background:linear-gradient(135deg,#8060d0,#6040b0); box-shadow:0 8px 20px rgba(100,60,200,.4); }
+.bd { background:linear-gradient(135deg,#c05070,#a03050); box-shadow:0 8px 20px rgba(180,60,100,.4); }
+.bc { background:linear-gradient(135deg,#40a090,#308070); box-shadow:0 8px 20px rgba(60,150,130,.4); }
+.bs { background:linear-gradient(135deg,#c07840,#a06030); box-shadow:0 8px 20px rgba(180,110,50,.4); }
+.btn-skip { padding:15px 18px; border-radius:16px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.06); color:var(--text2); font-size:13px; font-family:inherit; cursor:pointer; transition:transform 0.15s; }
+.btn-skip:active { transform:scale(0.97); }
+.prog-wrap { width:100%; margin-bottom:20px; }
+.prog-bar { width:100%; height:3px; background:rgba(255,255,255,.08); border-radius:2px; overflow:hidden; margin-bottom:6px; }
+.prog-fill { height:100%; border-radius:2px; transition:width .4s ease; }
+.prog-text { font-size:11px; color:var(--text3); text-align:right; }
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; }
+.stat { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px 8px; text-align:center; }
+.sv { font-size:26px; font-weight:700; color:var(--gold); line-height:1; margin-bottom:5px; }
+.sl { font-size:11px; color:var(--text3); }
 </style>
 </head>
 <body>
+<div class="glow1"></div>
+<div class="glow2"></div>
 <div class="app">
   <header>
-    <span class="logo-icon">💑</span>
+    <span class="logo">&#x1F491;</span>
     <h1>恋人游戏</h1>
     <p class="subtitle">情侣专属互动卡牌 · 四大主题</p>
   </header>
-
-  <div class="tabs" id="tabRow">
-    <button class="tab active-q" onclick="setMode('q')"><span class="tab-icon">💬</span>深度问题</button>
-    <button class="tab" onclick="setMode('d')"><span class="tab-icon">🎯</span>趣味任务</button>
-    <button class="tab" onclick="setMode('c')"><span class="tab-icon">🌈</span>双人挑战</button>
-    <button class="tab" onclick="setMode('s')"><span class="tab-icon">✨</span>脑洞题</button>
+  <div class="tabs" id="tabs">
+    <div class="tab aq" data-mode="q"><span class="ti">&#x1F4AC;</span>深度问题</div>
+    <div class="tab"    data-mode="d"><span class="ti">&#x1F3AF;</span>趣味任务</div>
+    <div class="tab"    data-mode="c"><span class="ti">&#x1F308;</span>双人挑战</div>
+    <div class="tab"    data-mode="s"><span class="ti">&#x2728;</span>脑洞题</div>
   </div>
-
-  <div class="card-stage" id="cardStage">
-    <div class="card-shadow card-shadow-1" id="shadow1"></div>
-    <div class="card-shadow card-shadow-2" id="shadow2"></div>
-    <div class="card card-welcome show" id="mainCard">
-      <div class="card-badge">欢迎</div>
-      <div class="card-text">选择上方的主题，<br>点击"抽一张牌"<br>开始你们的游戏吧 💕</div>
-      <div class="card-hint">点击卡片也可以抽牌</div>
+  <div class="stage">
+    <div class="shadow s1"></div>
+    <div class="shadow s2"></div>
+    <div class="card cw show" id="card">
+      <div class="badge" id="badge">欢迎</div>
+      <div class="ctext" id="ctext">选择上方主题<br>点击「抽一张牌」<br>开始你们的游戏吧 &#x1F495;</div>
+      <div class="chint" id="chint">点击卡片也可以抽牌</div>
     </div>
   </div>
-
-  <div class="btn-row">
-    <button class="btn-draw btn-q" id="drawBtn" onclick="drawCard()">🃏 抽一张牌</button>
-    <button class="btn-skip" onclick="drawCard()">跳过</button>
+  <div class="btns">
+    <button class="btn-draw bq" id="drawBtn" onclick="doDraw()">&#x1F0CF; 抽一张牌</button>
+    <button class="btn-skip" onclick="doDraw()">跳过</button>
   </div>
-
-  <div class="progress-wrap">
-    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-    <div class="progress-text" id="progressText">选择主题开始游戏</div>
+  <div class="prog-wrap">
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%;background:#e8c97a"></div></div>
+    <div class="prog-text" id="progText">选择主题开始游戏</div>
   </div>
-
   <div class="stats">
-    <div class="stat"><div class="stat-val" id="drawnVal">0</div><div class="stat-label">已抽卡片</div></div>
-    <div class="stat"><div class="stat-val" id="dareVal">0</div><div class="stat-label">完成任务</div></div>
-    <div class="stat"><div class="stat-val" id="sparkVal">0</div><div class="stat-label">脑洞爆发</div></div>
+    <div class="stat"><div class="sv" id="sD">0</div><div class="sl">已抽卡片</div></div>
+    <div class="stat"><div class="sv" id="sT">0</div><div class="sl">完成任务</div></div>
+    <div class="stat"><div class="sv" id="sS">0</div><div class="sl">脑洞爆发</div></div>
   </div>
 </div>
-
 <script>
-const CARDS = {
-  q: [
-    "如果我们的感情是一道菜，你觉得是什么菜？为什么？",
-    "你觉得我身上哪一点是你最意想不到的优点？",
-    "如果我是一种天气，你觉得我是什么天气？",
-    "我们吵架的时候，你最想让我做的一件事是什么？",
-    "如果要给我们的感情写一个电影标题，你会怎么写？",
-    "你觉得我们两个人最互补的地方是什么？",
-    "五年后，你希望我们的生活是什么样的？",
-    "你有没有哪一次特别想对我说"谢谢"，但没说出口？",
-    "你觉得我有什么小毛病，但你已经默默接受了？",
-    "有什么事你觉得我比你更了解你自己？",
-    "你对我们未来最期待的一件事是什么？",
-    "到目前为止，你最喜欢我们在一起的哪个瞬间？",
-    "我做的哪件事总是让你忍不住微笑？",
-    "如果可以去任何地方旅行，你最想和我去哪里？",
-    "有什么梦想你希望得到我的支持？",
-    "你觉得我们在一起之后，你改变最大的地方是什么？",
-    "你有没有一个秘密小习惯是我还不知道的？",
-    "如果今晚是我们最后一夜，你最想做什么？",
-    "哪首歌让你想到我们两个人？",
-    "我平时做的哪个小细节对你来说意义很大？",
-  ],
-  d: [
-    "给对方做30秒的肩膀按摩。",
-    "说三件你爱对方的事，不能重复之前说过的。",
-    "给对方编一首至少四句的打油诗。",
-    "用对方最讨厌的方式叫他/她的名字，看看反应。",
-    "现场表演求婚，越夸张越好！",
-    "互相在对方手上写一个字，对方来猜。",
-    "给对方发一条朋友圈夸他/她（要真发！）。",
-    "模仿对方接电话时的样子。",
-    "闭上眼睛摸对方的脸，说出三个形容词。",
-    "不说话，只用肢体语言表达"我爱你"。",
-    "给对方讲一个只有你们俩懂的笑话。",
-    "互相对视30秒，不能笑，谁先笑谁输。",
-    "用十个字以内，总结你们的感情故事。",
-    "给对方一个从未给过的夸奖。",
-    "给对方发一条甜蜜的语音消息并当场播放。",
-    "做你们最有默契的一个动作。",
-    "给对方一个额头吻。",
-    "用30秒重现你们第一次见面的场景。",
-  ],
-  c: [
-    "各自写下认识以来最尴尬的一刻，然后互相读出来。",
-    "两人同时用一个词描述对方，看是否一样。",
-    "各自猜对方现在最想吃什么，然后对比答案。",
-    "互评：谁更会哄人？谁更记仇？谁更黏人？",
-    "各自回忆第一次约会的细节，看谁记得更准。",
-    "一起回忆你们最近一次大笑是因为什么。",
-    "各自说出一个你们共同"暗语"或专属称呼的由来。",
-    "各自写下对方最让自己喜欢的一点，同时揭晓！",
-    "两人轮流说对方的优点，谁先说不出来谁输。",
-    "各自列出三件想一起做的事，找出重叠的。",
-    "一起用手机找出你们最早的一张合照。",
-    "各自给自己的厨艺和对方的厨艺打分，然后对比。",
-    "猜猜对方现在最喜欢的歌是什么，谁猜对了？",
-    "现在就花两分钟，一起计划下一次约会。",
-    "各自分享一个未来六个月的目标。",
-  ],
-  s: [
-    "如果我们互换身体一天，你第一件事会做什么？",
-    "如果我们的感情是一首歌，你会选哪首？为什么？",
-    "如果你可以给刚认识我的自己一句话，你会说什么？",
-    "如果我们开一家店，你觉得会开什么店？",
-    "如果我突然消失三天不联系，你会做什么？",
-    "如果我们的故事被拍成电影，谁来演你？谁演我？",
-    "如果你能改变我一个小习惯，你会改什么？",
-    "如果我们是动漫角色，你觉得我们会是哪两个？",
-    "如果你能读懂我的心，你觉得我现在在想什么？",
-    "如果我们可以穿越到任何时代，你会选哪个年代？",
-    "如果我是一种动物，你觉得我是什么？",
-    "如果我们明天就要搬去一个新城市，你会选哪里？",
-    "如果可以删掉我们之间的一段记忆，你会选哪段？",
-    "如果我们的感情是一种颜色，是什么颜色？",
-  ],
-};
+(function() {
+  var C = {
+    q: [
+      '如果我们的感情是一道菜，你觉得是什么菜？为什么？',
+      '你觉得我身上哪一点是你最意想不到的优点？',
+      '如果我是一种天气，你觉得我是什么天气？',
+      '我们吵架的时候，你最想让我做的一件事是什么？',
+      '如果要给我们的感情写一个电影标题，你会怎么写？',
+      '你觉得我们两个人最互补的地方是什么？',
+      '五年后，你希望我们的生活是什么样的？',
+      '你有没有哪一次特别想对我说谢谢，但没说出口？',
+      '你觉得我有什么小毛病，但你已经默默接受了？',
+      '有什么事你觉得我比你更了解你自己？',
+      '你对我们未来最期待的一件事是什么？',
+      '到目前为止，你最喜欢我们在一起的哪个瞬间？',
+      '我做的哪件事总是让你忍不住微笑？',
+      '如果可以去任何地方旅行，你最想和我去哪里？',
+      '有什么梦想你希望得到我的支持？',
+      '你觉得我们在一起之后，你改变最大的地方是什么？',
+      '你有没有一个秘密小习惯是我还不知道的？',
+      '如果今晚是我们最后一夜，你最想做什么？',
+      '哪首歌让你想到我们两个人？',
+      '我平时做的哪个小细节对你来说意义很大？'
+    ],
+    d: [
+      '给对方做30秒的肩膀按摩。',
+      '说三件你爱对方的事，不能重复之前说过的。',
+      '给对方编一首至少四句的打油诗。',
+      '用对方最讨厌的方式叫他或她的名字，看看反应。',
+      '现场表演求婚，越夸张越好！',
+      '互相在对方手上写一个字，对方来猜。',
+      '给对方发一条朋友圈夸他或她（要真发！）。',
+      '模仿对方接电话时的样子。',
+      '闭上眼睛摸对方的脸，说出三个形容词。',
+      '不说话，只用肢体语言表达我爱你。',
+      '给对方讲一个只有你们俩懂的笑话。',
+      '互相对视30秒，不能笑，谁先笑谁输。',
+      '用十个字以内，总结你们的感情故事。',
+      '给对方一个从未给过的夸奖。',
+      '给对方发一条甜蜜的语音消息并当场播放。',
+      '做你们最有默契的一个动作。',
+      '给对方一个额头吻。',
+      '用30秒重现你们第一次见面的场景。'
+    ],
+    c: [
+      '各自写下认识以来最尴尬的一刻，然后互相读出来。',
+      '两人同时用一个词描述对方，看是否一样。',
+      '各自猜对方现在最想吃什么，然后对比答案。',
+      '互评：谁更会哄人？谁更记仇？谁更黏人？',
+      '各自回忆第一次约会的细节，看谁记得更准。',
+      '一起回忆你们最近一次大笑是因为什么。',
+      '各自说出一个你们共同暗语或专属称呼的由来。',
+      '各自写下对方最让自己喜欢的一点，同时揭晓！',
+      '两人轮流说对方的优点，谁先说不出来谁输。',
+      '各自列出三件想一起做的事，找出重叠的。',
+      '一起用手机找出你们最早的一张合照。',
+      '各自给自己的厨艺和对方的厨艺打分，然后对比。',
+      '猜猜对方现在最喜欢的歌是什么，谁猜对了？',
+      '现在就花两分钟，一起计划下一次约会。',
+      '各自分享一个未来六个月的目标。'
+    ],
+    s: [
+      '如果我们互换身体一天，你第一件事会做什么？',
+      '如果我们的感情是一首歌，你会选哪首？为什么？',
+      '如果你可以给刚认识我的自己一句话，你会说什么？',
+      '如果我们开一家店，你觉得会开什么店？',
+      '如果我突然消失三天不联系，你会做什么？',
+      '如果我们的故事被拍成电影，谁来演你？谁演我？',
+      '如果你能改变我一个小习惯，你会改什么？',
+      '如果我们是动漫角色，你觉得我们会是哪两个？',
+      '如果你能读懂我的心，你觉得我现在在想什么？',
+      '如果我们可以穿越到任何时代，你会选哪个年代？',
+      '如果我是一种动物，你觉得我是什么？',
+      '如果我们明天就要搬去一个新城市，你会选哪里？',
+      '如果可以删掉我们之间的一段记忆，你会选哪段？',
+      '如果我们的感情是一种颜色，是什么颜色？'
+    ]
+  };
 
-const MODE_CONFIG = {
-  q: { label: '深度问题', badge: '💬 问题', cardClass: 'card-q', btnClass: 'btn-q', tabClass: 'active-q', progress: '#e8c97a' },
-  d: { label: '趣味任务', badge: '🎯 任务', cardClass: 'card-d', btnClass: 'btn-d', tabClass: 'active-d', progress: '#e8748a' },
-  c: { label: '双人挑战', badge: '🌈 挑战', cardClass: 'card-c', btnClass: 'btn-c', tabClass: 'active-c', progress: '#74c9b8' },
-  s: { label: '脑洞题',   badge: '✨ 脑洞', cardClass: 'card-s', btnClass: 'btn-s', tabClass: 'active-s', progress: '#e8a060' },
-};
+  var CFG = {
+    q: { label:'深度问题', badge:'💬 问题', cc:'cq', bc:'bq', tc:'aq', clr:'#e8c97a' },
+    d: { label:'趣味任务', badge:'🎯 任务', cc:'cd', bc:'bd', tc:'ad', clr:'#e8748a' },
+    c: { label:'双人挑战', badge:'🌈 挑战', cc:'cc', bc:'bc', tc:'ac', clr:'#74c9b8' },
+    s: { label:'脑洞题',   badge:'✨ 脑洞', cc:'cs', bc:'bs', tc:'as', clr:'#e8a060' }
+  };
 
-let mode = 'q';
-let used = { q: [], d: [], c: [], s: [] };
-let drawn = 0, dares = 0, sparks = 0;
-let animating = false;
+  var mode = 'q';
+  var used = { q:[], d:[], c:[], s:[] };
+  var drawn = 0, dares = 0, sparks = 0;
+  var busy = false;
+  var MODES = ['q','d','c','s'];
 
-const tabs = document.querySelectorAll('.tab');
-const modeKeys = ['q', 'd', 'c', 's'];
-
-function setMode(m) {
-  mode = m;
-  tabs.forEach((t, i) => {
-    t.className = 'tab';
-    if (modeKeys[i] === m) t.classList.add(MODE_CONFIG[m].tabClass);
+  // Tab clicks
+  document.getElementById('tabs').addEventListener('click', function(e) {
+    var t = e.target;
+    while (t && !t.getAttribute('data-mode')) t = t.parentElement;
+    if (!t) return;
+    mode = t.getAttribute('data-mode');
+    var tabs = document.querySelectorAll('.tab');
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].className = 'tab' + (MODES[i] === mode ? ' ' + CFG[mode].tc : '');
+    }
+    var btn = document.getElementById('drawBtn');
+    btn.className = 'btn-draw ' + CFG[mode].bc;
+    updateProg();
   });
-  const btn = document.getElementById('drawBtn');
-  btn.className = 'btn-draw ' + MODE_CONFIG[m].btnClass;
-  updateProgress();
-}
 
-function updateProgress() {
-  const total = CARDS[mode].length;
-  const done = used[mode].length;
-  const pct = (done / total * 100).toFixed(0);
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressFill').style.background = MODE_CONFIG[mode].progress;
-  document.getElementById('progressText').textContent =
-    `${MODE_CONFIG[mode].label} · 还剩 ${total - done} 张`;
-}
+  // Card click
+  document.getElementById('card').addEventListener('click', function() { doDraw(); });
 
-function drawCard() {
-  if (animating) return;
-  animating = true;
+  function updateProg() {
+    var total = C[mode].length;
+    var done = used[mode].length;
+    var pct = Math.round(done / total * 100);
+    var fill = document.getElementById('progFill');
+    fill.style.width = pct + '%';
+    fill.style.background = CFG[mode].clr;
+    document.getElementById('progText').textContent =
+      CFG[mode].label + ' · 还剩 ' + (total - done) + ' 张';
+  }
 
-  const pool = CARDS[mode];
-  if (used[mode].length >= pool.length) used[mode] = [];
-  const remaining = pool.filter((_, i) => !used[mode].includes(i));
-  const pick = remaining[Math.floor(Math.random() * remaining.length)];
-  const idx = pool.indexOf(pick);
-  used[mode].push(idx);
+  function doDraw() {
+    if (busy) return;
+    busy = true;
+    var pool = C[mode];
+    if (used[mode].length >= pool.length) used[mode] = [];
+    var rem = [];
+    for (var i = 0; i < pool.length; i++) {
+      if (used[mode].indexOf(i) === -1) rem.push(i);
+    }
+    var idx = rem[Math.floor(Math.random() * rem.length)];
+    used[mode].push(idx);
+    var pick = pool[idx];
 
-  drawn++;
-  if (mode === 'd') dares++;
-  if (mode === 's') sparks++;
+    drawn++;
+    if (mode === 'd') dares++;
+    if (mode === 's') sparks++;
+    document.getElementById('sD').textContent = drawn;
+    document.getElementById('sT').textContent = dares;
+    document.getElementById('sS').textContent = sparks;
 
-  document.getElementById('drawnVal').textContent = drawn;
-  document.getElementById('dareVal').textContent = dares;
-  document.getElementById('sparkVal').textContent = sparks;
+    var card = document.getElementById('card');
+    var cfg = CFG[mode];
+    card.className = 'card ' + cfg.cc + ' hide';
 
-  const card = document.getElementById('mainCard');
-  const cfg = MODE_CONFIG[mode];
-
-  card.classList.remove('show');
-  card.classList.add('exit');
-
-  setTimeout(() => {
-    card.className = 'card ' + cfg.cardClass + ' enter';
-    card.innerHTML = `
-      <div class="card-badge">${cfg.badge}</div>
-      <div class="card-text">${pick}</div>
-      <div class="card-hint">点击卡片抽下一张</div>
-    `;
-    // tap on card
-    card.onclick = drawCard;
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        card.classList.remove('enter');
-        card.classList.add('show');
-        animating = false;
+    setTimeout(function() {
+      document.getElementById('badge').textContent = cfg.badge;
+      document.getElementById('ctext').textContent = pick;
+      document.getElementById('chint').textContent = '点击卡片抽下一张';
+      card.className = 'card ' + cfg.cc + ' rise';
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          card.className = 'card ' + cfg.cc + ' show';
+          busy = false;
+        });
       });
-    });
-  }, 320);
+    }, 280);
 
-  updateProgress();
-}
+    updateProg();
+  }
 
-// init card click
-document.getElementById('mainCard').onclick = drawCard;
+  // expose to onclick
+  window.doDraw = doDraw;
+})();
 </script>
 </body>
 </html>
